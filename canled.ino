@@ -1,6 +1,6 @@
 // MODIFIED FROM CAN Receive Example
 //
-
+// move for loops from rainbow functions into loop() in order to prevent blocking.
 #include <mcp_can.h>
 #include <SPI.h>
 #include <FastLED.h>  // maybe a better lib than fastled? something lighter
