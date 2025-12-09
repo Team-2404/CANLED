@@ -7,12 +7,14 @@ class CANLED:
         self.api_id = 473
     
     def solid_color(self, red : int, green : int, blue : int):
-        color = [0,red, green, blue]
+        color = [1,red, green, blue]
         self.device.writePacket(color[0].to_bytes()+color[1].to_bytes()+color[2].to_bytes()+color[3].to_bytes(), self.api_id)
     
     def rainbow_cycle(self):
-        self.device.writePacket((1).to_bytes(), self.api_id)
+        # colors need to be fixed
+        self.device.writePacket((2).to_bytes(), self.api_id)
 
     def rainbow_solid(self):
-        self.device.writePacket((2).to_bytes(), self.api_id)
+        # currently acts strangely
+        self.device.writePacket((3).to_bytes(), self.api_id)
 
