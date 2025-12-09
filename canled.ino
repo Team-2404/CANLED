@@ -1,6 +1,6 @@
 // MODIFIED FROM CAN Receive Example
 //
-// move for loops from rainbow functions into loop() in order to prevent blocking.
+// todo: use hsv
 #include <mcp_can.h>
 #include <SPI.h>
 #include <FastLED.h>  // maybe a better lib than fastled? something lighter
@@ -10,17 +10,43 @@ unsigned char len = 0;
 unsigned char rxBuf[8];
 char msgString[128];
 #define DATA_PIN 3
-#define DEVICE_ID 55
-#define NUM_LEDS 50
-#define COLOR_ORDER RGB
+#define DEVICE_ID 55  // FRC device ID - The one you'd set for motors etc.
+#define NUM_LEDS 86
+#define COLOR_ORDER GRB  // for some reason, setting this to GRB means fill_solid() actually uses RGB and vice versa.
 #define LED_TYPE WS2812B
 #define CAN0_INT 2  // Set INT to pin 2
 MCP_CAN CAN0(10);   // Set CS to pin 10
 CRGB leds[NUM_LEDS];
 int mode = 0;
 int color[] = { 0, 0, 0 };
-bool isRainbowing = false;
-bool isRainbow1ing = false;
+byte dir;
+
+struct rainbow_state {
+  u8 index;
+  const u16 wait;
+  const u8 dim;
+};
+
+struct solid_rainbow_state {
+  // const u16 wait;
+  // const u8 dim;
+  // u8 color[3];
+  // /* these dont go above 2. maybe use a bitfield? */
+  // u8 increase;
+  // u8 decrease;
+  // u8 num_color;
+  u16 wait;
+  u8 color;
+};
+
+#define SOLID_RAINBOW_INIT(_wait) (struct solid_rainbow_state) { .wait = _wait,.color = 0}
+#define RAINBOW_INIT(_wait, _dim) \
+  (struct rainbow_state) { \
+    .index = 0, .wait = _wait, .dim = _dim \
+  }
+
+struct rainbow_state rainbow_one = RAINBOW_INIT(10, 6);
+struct solid_rainbow_state rainbow_two = SOLID_RAINBOW_INIT(20);
 
 void setup() {
   pinMode(4, OUTPUT);
@@ -30,10 +56,7 @@ void setup() {
   FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
 
   if (CAN0.begin(MCP_EXT, CAN_1000KBPS, MCP_8MHZ) == CAN_OK) {
-    Serial.println("MCP2515 Initialized Successfully!");
     digitalWrite(4, HIGH);
-  } else {
-    Serial.println("Error Initializing MCP2515...");
   }
 
   CAN0.init_Mask(0, 1, 0x3F);  // make sure these guys are doing something -- test on prebuilt modules
@@ -53,13 +76,6 @@ void setup() {
 }
 
 void loop() {
-  // if (mode == 7) {
-  //   fill_solid(leds, NUM_LEDS, CRGB(color[0], color[1], color[2]));
-  //   FastLED.show();
-  // } else {
-  //   rainbow();  // find some way to let other patterns run -- lower priority
-  // }
-  //mode = 3;
   switch (mode) {
     case 1:
       {
@@ -69,23 +85,22 @@ void loop() {
       }
     case 2:
       {
-        if (!isRainbowing) {
-          isRainbow1ing = false;
-          rainbow();
-        }
+        rainbowCycle(&rainbow_one);
+        dir = random(0, 2);
         break;
       }
     case 3:
       {
-        if (!isRainbow1ing) {
-          isRainbowing = false;
-          rainbowCycle1(10, 10, 10);
-        }
+        rainbowCycleSolid(&rainbow_two);
+        break;
+      }
+    default:
+      {
         break;
       }
   }
   digitalWrite(5, LOW);
-  digitalWrite(4, LOW);
+  //digitalWrite(4, LOW);
 
   if (!digitalRead(CAN0_INT))  // If CAN0_INT pin is low, read receive buffer
   {
@@ -106,90 +121,69 @@ void loop() {
 
 // MODIFIED FROM https://github.com/leon-anavi/arduino-fastled-rainbow/blob/master/fastled_rainbow/fastled_rainbow.ino
 
-void rainbow() {
-  isRainbowing = true;
-  randomSeed(millis());
-
-  int wait = random(10, 30);
-  int dim = random(4, 6);
-  int max_cycles = 8;
-  int cycles = random(1, max_cycles + 1);
-
-  rainbowCycle(wait, cycles, dim);
-  isRainbowing = false;
-}
-
-void rainbowCycle(int wait, int cycles, int dim) {
-  //loop several times with same configurations and same delay
-  for (int cycle = 0; cycle < cycles; cycle++) {
-    byte dir = random(0, 2);
-    int k = 255;
-
-    //loop through all colors in the wheel
-    for (int j = 0; j < 256; j++, k--) {
-
-      if (k < 0) {
-        k = 255;
-      }
-
-      //Set RGB color of each LED
-      for (int i = 0; i < NUM_LEDS; i++) {
-        CRGB ledColor = wheel(((i * 256 / NUM_LEDS) + (dir == 0 ? j : k)) % 256, dim);
-        leds[i] = ledColor;
-      }
-
-      FastLED.show();
-      FastLED.delay(wait);
-    }
+void rainbowCycle(struct rainbow_state* state) {
+  //loop through all colors in the wheel
+  state->index--;
+  if (state->index < 0) {
+    state->index = 255;
   }
+
+  //Set RGB color of each LED
+  for (int i = 0; i < NUM_LEDS; i++) {
+    CRGB ledColor = wheel(((i * 256 / NUM_LEDS) + state->index) % 256, state->dim);
+    leds[i] = ledColor;
+  }
+
+  FastLED.show();
+  FastLED.delay(state->wait);
 }
+
 
 CRGB wheel(int WheelPos, int dim) {
-  CRGB color;
+  CRGB color;  // orgininally R G B ordering
   if (85 > WheelPos) {
-    color.r = 0;
-    color.g = WheelPos * 3 / dim;
-    color.b = (255 - WheelPos * 3) / dim;
-    ;
-  } else if (170 > WheelPos) {
-    color.r = WheelPos * 3 / dim;
-    color.g = (255 - WheelPos * 3) / dim;
     color.b = 0;
-  } else {
+    color.g = WheelPos * 3 / dim;
     color.r = (255 - WheelPos * 3) / dim;
-    color.g = 0;
+  } else if (170 > WheelPos) {
     color.b = WheelPos * 3 / dim;
+    color.g = (255 - WheelPos * 3) / dim;
+    color.r = 0;
+  } else {
+    color.b = (255 - WheelPos * 3) / dim;
+    color.g = 0;
+    color.r = WheelPos * 3 / dim;  // *3
   }
   return color;
 }
 
-void rainbowCycle1(int wait, int cycles, int dim) {
-  isRainbow1ing = true;
-  Serial.println("Let's make a rainbow.");
-  //loop several times with same configurations and same delay
-  unsigned int rgbColour[3];
 
-  // Start off with red.
-  rgbColour[0] = 255;
-  rgbColour[1] = 0;
-  rgbColour[2] = 0;
+void rainbowCycleSolid(struct solid_rainbow_state* state) {
+  /* TODO: i dont know what the diffrence between the conversion functions are */
+  CRGB c = hsv2rgb_rainbow(CHSV(state->color, 255, 255));
+  state->color++;
+  fill_solid(leds, NUM_LEDS, c);\
+  FastLED.show();
+  FastLED.delay(state->wait);
+  // state->num_color++;
+  // if (state->num_color == 0) {
+  //   state->num_color = 0;
 
-  // Choose the colours to increment and decrement.
-  for (int decColour = 0; decColour < 3; decColour += 1) {
-    int incColour = decColour == 2 ? 0 : decColour + 1;
+  //   state->decrease++;
+  //   if (state->decrease > 3) {
+  //     state->decrease = 0;
+  //   }
 
-    // cross-fade the two colours.
-    for (int i = 0; i < 255; i += 1) {
-      rgbColour[decColour] -= 1;
-      rgbColour[incColour] += 1;
+  //   state->increase = state->decrease == 2 ? 0 : state->decrease + 1;
+  // }
 
-      fill_solid(leds, NUM_LEDS, CRGB(rgbColour[0], rgbColour[1], rgbColour[2]));
+  // state->color[state->decrease]--;
+  // state->color[state->increase]++;
 
-      FastLED.show();
-      FastLED.delay(wait);
-    }
-  }
-  isRainbow1ing = false;
+  // fill_solid(leds, NUM_LEDS, CRGB(state->color[0], state->color[1], state->color[2]));
+
+  // FastLED.show();
+  // FastLED.delay(state->wait);
 }
 
 /*********************************************************************************************************
