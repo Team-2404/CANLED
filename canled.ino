@@ -35,18 +35,23 @@ struct solid_rainbow_state {
   // u8 increase;
   // u8 decrease;
   // u8 num_color;
-  u16 wait;
+ 
+  u8 color;
+};
+struct real_rainbow_state {
   u8 color;
 };
 
-#define SOLID_RAINBOW_INIT(_wait) (struct solid_rainbow_state) { .wait = _wait,.color = 0}
+#define SOLID_RAINBOW_INIT() (struct solid_rainbow_state) {.color = 0}
 #define RAINBOW_INIT(_wait, _dim) \
   (struct rainbow_state) { \
     .index = 0, .wait = _wait, .dim = _dim \
   }
 
+
 struct rainbow_state rainbow_one = RAINBOW_INIT(10, 6);
-struct solid_rainbow_state rainbow_two = SOLID_RAINBOW_INIT(20);
+struct solid_rainbow_state rainbow_two = {0};
+struct real_rainbow_state rainbow_three = {0};
 
 void setup() {
   pinMode(4, OUTPUT);
@@ -80,6 +85,7 @@ void loop() {
     case 1:
       {
         fill_solid(leds, NUM_LEDS, CRGB(color[0], color[1], color[2]));
+        //rainbow_real(&rainbow_three);
         FastLED.show();
         break;
       }
@@ -91,7 +97,12 @@ void loop() {
       }
     case 3:
       {
-        rainbowCycleSolid(&rainbow_two);
+        rainbowCycleSolid(&rainbow_two, color[0]);
+        break;
+      }
+    case 4:
+      {
+        rainbow_real(&rainbow_three, color[0]);
         break;
       }
     default:
@@ -123,10 +134,10 @@ void loop() {
 
 void rainbowCycle(struct rainbow_state* state) {
   //loop through all colors in the wheel
-  state->index--;
-  if (state->index < 0) {
-    state->index = 255;
-  }
+  state->index++;
+  // if (state->index < 0) {
+  //   state->index = 255;
+  // }
 
   //Set RGB color of each LED
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -140,31 +151,51 @@ void rainbowCycle(struct rainbow_state* state) {
 
 
 CRGB wheel(int WheelPos, int dim) {
-  CRGB color;  // orgininally R G B ordering
-  if (85 > WheelPos) {
-    color.b = 0;
-    color.g = WheelPos * 3 / dim;
-    color.r = (255 - WheelPos * 3) / dim;
-  } else if (170 > WheelPos) {
-    color.b = WheelPos * 3 / dim;
-    color.g = (255 - WheelPos * 3) / dim;
-    color.r = 0;
-  } else {
-    color.b = (255 - WheelPos * 3) / dim;
-    color.g = 0;
-    color.r = WheelPos * 3 / dim;  // *3
+//   CRGB color;  // orgininally R G B ordering
+//   if (85 > WheelPos) {
+//     color.b = 0;
+//     color.g = WheelPos * 3 / dim;
+//     color.r = (255 - WheelPos * 3) / dim;
+//   } else if (170 > WheelPos) {
+//     color.b = WheelPos * 3 / dim;
+//     color.g = (255 - WheelPos * 3) / dim;
+//     color.r = 0;
+//   } else {
+//     color.b = (255 - WheelPos * 3) / dim;
+//     color.g = 0;
+//     color.r = WheelPos * 3 / dim;  // *3
+//   }
+//   return color;
+ CRGB color;
+  if (85 > WheelPos)
+  {
+   color.r=0;
+   color.g=WheelPos * 3/dim;
+   color.b=(255 - WheelPos * 3)/dim;;
+  } 
+  else if (170 > WheelPos)
+  {
+   color.r=WheelPos * 3/dim;
+   color.g=(255 - WheelPos * 3)/dim;
+   color.b=0;
+  }
+  else
+  {
+   color.r=(255 - WheelPos * 3)/dim;
+   color.g=0;
+   color.b=WheelPos * 3/dim;
   }
   return color;
-}
+ }
 
 
-void rainbowCycleSolid(struct solid_rainbow_state* state) {
+void rainbowCycleSolid(struct solid_rainbow_state* state, u8 wait) {
   /* TODO: i dont know what the diffrence between the conversion functions are */
   CRGB c = hsv2rgb_rainbow(CHSV(state->color, 255, 255));
   state->color++;
   fill_solid(leds, NUM_LEDS, c);\
   FastLED.show();
-  FastLED.delay(state->wait);
+  FastLED.delay(wait);
   // state->num_color++;
   // if (state->num_color == 0) {
   //   state->num_color = 0;
@@ -186,6 +217,14 @@ void rainbowCycleSolid(struct solid_rainbow_state* state) {
   // FastLED.delay(state->wait);
 }
 
+void rainbow_real(struct real_rainbow_state* state, u8 wait){
+  state->color++;
+  for(int i = 0; i<NUM_LEDS;i++){
+    leds[i].setHSV(state->color+i,255,255);
+  }
+  FastLED.show();
+  FastLED.delay(wait);
+}
 /*********************************************************************************************************
   END FILE
 *******************************************************************************************/
