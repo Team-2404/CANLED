@@ -1,7 +1,12 @@
 package frc.robot.subsystems;
-//  By Conor Kelly Gerakos, Team 2404
-//  For usage with the CANLED board.
-//  Place into subsystems folder.
+/* CANLED WPILIB Python API
+
+Author: Conor Kelly Gerakos
+Team: FRC 2404
+License: GPL v3.0
+Year: 2025
+Usage: Place into subsystems folder.
+*/
 
 import edu.wpi.first.wpilibj.CAN;
 
