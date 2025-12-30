@@ -1,25 +1,42 @@
-// MODIFIED FROM CAN Receive Example
-//
-// todo: use hsv
+/*
+ * CANLED ATmega328P firmware
+ *
+ * Author: Conor Kelly Gerakos
+ * Team: FRC 2404
+ * License: GPL v3.0
+ * Year: 2025
+ */
 #include <mcp_can.h>
 #include <SPI.h>
-#include <FastLED.h>  // maybe a better lib than fastled? something lighter
+#include <FastLED.h>
+
+// CAN Pins
+#define CAN0_CS_PIN    10
+#define CAN0_INT_PIN   2
+
+// Board LED Pins
+#define LED_DATA_PIN   3
+#define LED_OK_PIN     4
+#define LED_STATUS_PIN 5
+
+// FRC Device ID
+#define DEVICE_ID 55
+
+// LED Constants
+#define NUM_LEDS 86
+#define LED_TYPE WS2812B
+#define COLOR_ORDER GRB  // GRB here but actually RGB?
 
 long unsigned int rxId;
 unsigned char len = 0;
 unsigned char rxBuf[8];
 char msgString[128];
-#define DATA_PIN 3
-#define DEVICE_ID 55  // FRC device ID - The one you'd set for motors etc.
-#define NUM_LEDS 86
-#define COLOR_ORDER GRB  // for some reason, setting this to GRB means fill_solid() actually uses RGB and vice versa.
-#define LED_TYPE WS2812B
-#define CAN0_INT 2  // Set INT to pin 2
-MCP_CAN CAN0(10);   // Set CS to pin 10
-CRGB leds[NUM_LEDS];
 int mode = 0;
 int color[] = { 0, 0, 0 };
 byte dir;
+
+MCP_CAN CAN0(CAN0_CS_PIN);
+CRGB leds[NUM_LEDS];
 
 struct rainbow_state {
   u8 index;
@@ -28,40 +45,30 @@ struct rainbow_state {
 };
 
 struct solid_rainbow_state {
-  // const u16 wait;
-  // const u8 dim;
-  // u8 color[3];
-  // /* these dont go above 2. maybe use a bitfield? */
-  // u8 increase;
-  // u8 decrease;
-  // u8 num_color;
- 
   u8 color;
 };
+
 struct real_rainbow_state {
   u8 color;
 };
 
 #define SOLID_RAINBOW_INIT() (struct solid_rainbow_state) {.color = 0}
-#define RAINBOW_INIT(_wait, _dim) \
-  (struct rainbow_state) { \
-    .index = 0, .wait = _wait, .dim = _dim \
-  }
-
+#define RAINBOW_INIT(_wait, _dim) (struct rainbow_state) {.index = 0, .wait = _wait, .dim = _dim}
 
 struct rainbow_state rainbow_one = RAINBOW_INIT(10, 6);
 struct solid_rainbow_state rainbow_two = {0};
 struct real_rainbow_state rainbow_three = {0};
 
 void setup() {
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  digitalWrite(5, LOW);
+  pinMode(CAN0_INT_PIN, INPUT);
+  pinMode(LED_OK_PIN, OUTPUT);
+  pinMode(LED_STATUS_PIN, OUTPUT);
+  digitalWrite(LED_STATUS_PIN, LOW);
 
-  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.addLeds<LED_TYPE, LED_DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
 
   if (CAN0.begin(MCP_EXT, CAN_1000KBPS, MCP_8MHZ) == CAN_OK) {
-    digitalWrite(4, HIGH);
+    digitalWrite(LED_OK_PIN, HIGH);
   }
 
   CAN0.init_Mask(0, 1, 0x3F);  // make sure these guys are doing something -- test on prebuilt modules
@@ -74,10 +81,6 @@ void setup() {
   CAN0.init_Filt(5, 1, 0x37);
   // maybe incorporate other parts of the CAN packet in choosing patterns (API ID)
   CAN0.setMode(MCP_NORMAL);  // Set operation mode to normal so the MCP2515 sends acks to received data.
-
-  pinMode(CAN0_INT, INPUT);  // Configuring pin for /INT input
-
-  Serial.println("MCP2515 Library Receive Example...");
 }
 
 void loop() {
@@ -85,7 +88,6 @@ void loop() {
     case 1:
       {
         fill_solid(leds, NUM_LEDS, CRGB(color[0], color[1], color[2]));
-        //rainbow_real(&rainbow_three);
         FastLED.show();
         break;
       }
@@ -110,12 +112,11 @@ void loop() {
         break;
       }
   }
-  digitalWrite(5, LOW);
-  //digitalWrite(4, LOW);
+  digitalWrite(LED_STATUS_PIN, LOW);
 
-  if (!digitalRead(CAN0_INT))  // If CAN0_INT pin is low, read receive buffer
+  if (!digitalRead(CAN0_INT_PIN))  // If CAN0_INT_PIN pin is low, read receive buffer
   {
-    digitalWrite(4, HIGH);
+    digitalWrite(LED_OK_PIN, HIGH);
     CAN0.readMsgBuf(&rxId, &len, rxBuf);  // Read data: len = data length, buf = data byte(s)
 
     if ((rxId & 0x3F) == DEVICE_ID) {
@@ -225,6 +226,3 @@ void rainbow_real(struct real_rainbow_state* state, u8 wait){
   FastLED.show();
   FastLED.delay(wait);
 }
-/*********************************************************************************************************
-  END FILE
-*******************************************************************************************/
