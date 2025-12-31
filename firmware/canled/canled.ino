@@ -1,7 +1,7 @@
 /*
  * CANLED ATmega328P firmware
  *
- * Author: Conor Kelly Gerakos
+ * Authors: Koshan Dawalty, Conor Kelly Gerakos
  * Team: FRC 2404
  * License: GPL v3.0
  * Year: 2025
@@ -226,3 +226,4 @@ void rainbow_real(struct real_rainbow_state* state, u8 wait){
   FastLED.show();
   FastLED.delay(wait);
 }
+
