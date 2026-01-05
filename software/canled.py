@@ -10,7 +10,7 @@ Year: 2025
 import wpilib
 
 class CANLED:
-    """A class for controlling CANLED."""
+    """A class for controlling the CANLED board."""
     def __init__(self, can_id: int):
         self.can_id = can_id
         self.device = wpilib.CAN(can_id)
@@ -23,20 +23,12 @@ class CANLED:
         color = [1, red, green, blue]
         self.device.writePacket(color[0].to_bytes()+color[1].to_bytes()+color[2].to_bytes()+color[3].to_bytes(), self.api_id)
 
-    def rainbow_cycle(self):
-        """Rainbow 'wave' of sorts."""
+    def rainbow_cycle(self, wait = 10):
+        """Rainbow 'wave' of sorts. Waits for (wait) ms during loop."""
         # colors need to be fixed
-        self.device.writePacket((self.wavenum).to_bytes(), self.api_id)
+        self.device.writePacket((self.wavenum).to_bytes()+wait.to_bytes(), self.api_id)
 
-    def rainbow_solid(self):
-        """All LEDs cycle through the same colors."""
+    def rainbow_solid(self, wait = 10):
+        """All LEDs cycle through the same colors. Waits for (wait) ms during loop."""
         # currently acts strangely
-        self.device.writePacket((self.solidnum).to_bytes(), self.api_id)
-
-    # def rainbow_cycle(self, wait:int):
-    #     """Rainbow 'wave' of sorts.  Waits for (wait) ms before changing."""
-    #     self.device.writePacket((self.wavenum).to_bytes()+wait.to_bytes(), self.api_id)
-
-    # def rainbow_solid(self, wait:int):
-    #     """All LEDs cycle through the same colors. Waits for (wait) ms before changing."""
-    #     self.device.writePacket((self.solidnum).to_bytes()+wait.to_bytes(), self.api_id)
+        self.device.writePacket((self.solidnum).to_bytes()+wait, self.api_id)
