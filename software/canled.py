@@ -14,7 +14,7 @@ class CANLED:
     def __init__(self, can_id: int):
         self.can_id = can_id
         self.device = wpilib.CAN(can_id)
-        self.api_id = 473
+        self.api_id = 0b01010000010000000000000000000 + can_id
         self.wavenum = 4
         self.solidnum = 3
 

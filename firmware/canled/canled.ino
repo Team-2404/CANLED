@@ -1,7 +1,7 @@
 /*
  * CANLED ATmega328P firmware
  *
- * Authors: Koshan Dawalty, Conor Kelly Gerakos
+ * Authors: Conor Kelly Gerakos, Koshan Dawlaty
  * Team: FRC 2404
  * License: GPL v3.0
  * Year: 2025
@@ -22,9 +22,23 @@
 // FRC Device ID
 #define DEVICE_ID 55
 
-// LED Constants
+// FRC Device Type
+#define DEVICE_TYPE 10
+
+// FRC Device Manufacturer
+#define DEVICE_MFG 8
+
+// ROBORIO Disable ID
+#define BROADCAST_DISABLE 0b00000000000000000000000000000
+
+// ROBORIO CAN Heartbeat
+#define HEARTBEAT 0x01011840
+
+// Number of LEDs used in strip -- change if different
 #define NUM_LEDS 86
+// Type of LED controller -- change if different, must be supported by FastLED - see docs: https://github.com/FastLED/FastLED/wiki/Chipset-reference
 #define LED_TYPE WS2812B
+// Color order for LED strip - not entirely certain what this does, as ordering is strange
 #define COLOR_ORDER GRB  // GRB here but actually RGB?
 
 long unsigned int rxId;
@@ -72,13 +86,13 @@ void setup() {
   }
 
   CAN0.init_Mask(0, 1, 0x3F);  // make sure these guys are doing something -- test on prebuilt modules
-  CAN0.init_Filt(0, 1, 0x37);
+  CAN0.init_Filt(0, 1, 0x37);  
   CAN0.init_Filt(1, 1, 0x37);
   CAN0.init_Filt(2, 1, 0x37);
   CAN0.init_Filt(3, 1, 0x37);
-  CAN0.init_Mask(1, 1, 0x3F);
-  CAN0.init_Filt(4, 1, 0x37);
-  CAN0.init_Filt(5, 1, 0x37);
+  CAN0.init_Mask(1, 1, 0b11111111111111111111111111111); // TEST
+  CAN0.init_Filt(4, 1, BROADCAST_DISABLE);
+  CAN0.init_Filt(5, 1, HEARTBEAT);
   // maybe incorporate other parts of the CAN packet in choosing patterns (API ID)
   CAN0.setMode(MCP_NORMAL);  // Set operation mode to normal so the MCP2515 sends acks to received data.
 }
@@ -118,6 +132,17 @@ void loop() {
   {
     digitalWrite(LED_OK_PIN, HIGH);
     CAN0.readMsgBuf(&rxId, &len, rxBuf);  // Read data: len = data length, buf = data byte(s)
+    if(rxId == BROADCAST_DISABLE) // TEST
+    {
+      while(1)
+      {
+        CAN0.readMsgBuf(&rxId, &len, rxBuf);
+        if(rxId == HEARTBEAT && ((rxBuf[4]&&00000010)==1)){ // TEST
+          loop();
+        }
+        delay(20);
+      }; // Disables device to comply with FRC CAN spec. Will re-enable upon detecting set 'enabled' bit in CAN heartbeat.
+    }
 
     if ((rxId & 0x3F) == DEVICE_ID) {
       mode = rxBuf[0];
