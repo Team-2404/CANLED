@@ -165,7 +165,7 @@
 	(net 46 "STBY")
 	(net 47 "SCL")
 	(net 48 "SDA")
-	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "06d387ef-25d8-4099-9bbb-a3a62a803979")
 		(at 150.34 93)
@@ -339,7 +339,7 @@
 			)
 		)
 	)
-	(footprint "Converter_DCDC:Converter_DCDC_TRACO_TSR-1_THT"
+	(footprint "LibraryCANLED:Converter_DCDC_TRACO_TSR-1_THT"
 		(layer "F.Cu")
 		(uuid "131c7761-5ef3-4e89-a087-5bf283bc7178")
 		(at 184 68.5)
@@ -605,7 +605,7 @@
 			)
 		)
 	)
-	(footprint "Inductor_THT:L_Axial_L6.6mm_D2.7mm_P10.16mm_Horizontal_Vishay_IM-2"
+	(footprint "LibraryCANLED:L_Axial_L6.6mm_D2.7mm_P10.16mm_Horizontal_Vishay_IM-2"
 		(layer "F.Cu")
 		(uuid "2333dd6d-6146-4cce-84c0-991b3a166679")
 		(at 158.92 71)
@@ -781,7 +781,7 @@
 			)
 		)
 	)
-	(footprint "Package_DIP:DIP-8_W7.62mm_Socket_LongPads"
+	(footprint "LibraryCANLED:DIP-8_W7.62mm_Socket_LongPads"
 		(layer "F.Cu")
 		(uuid "23f264c4-46b3-4eb1-812e-81fc70ade565")
 		(at 136.38 64.38)
@@ -1237,7 +1237,7 @@
 			)
 		)
 	)
-	(footprint "footprints:K104K10X7RF5UH5_VIS"
+	(footprint "LibraryCANLED:K104K10X7RF5UH5_VIS"
 		(layer "F.Cu")
 		(uuid "2a5e7a09-9714-48c4-8df8-0e103eb80637")
 		(at 131.5 98.5 90)
@@ -1480,7 +1480,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm"
+	(footprint "LibraryCANLED:CP_Radial_D5.0mm_P2.50mm"
 		(layer "F.Cu")
 		(uuid "2fdfa8b2-9db2-4ea2-876a-bff126de4b43")
 		(at 126 77.5 90)
@@ -2835,7 +2835,7 @@
 			)
 		)
 	)
-	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "347e7fe9-6953-4d1c-98d7-3b501fd08c3c")
 		(at 161.42 87.5)
@@ -3009,7 +3009,7 @@
 			)
 		)
 	)
-	(footprint "footprints:K104K10X7RF5UH5_VIS"
+	(footprint "LibraryCANLED:K104K10X7RF5UH5_VIS"
 		(layer "F.Cu")
 		(uuid "44810140-7817-4397-b5ad-32e5a08b9756")
 		(at 186.5 84.5 180)
@@ -3252,7 +3252,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "footprints:K104K10X7RF5UH5_VIS"
+	(footprint "LibraryCANLED:K104K10X7RF5UH5_VIS"
 		(layer "F.Cu")
 		(uuid "44f72543-0011-4a8f-98f5-df8edd720da5")
 		(at 182 75)
@@ -3495,7 +3495,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "ABL-16.000MHZ-B2:XTAL_HC49P488W46L1150T500H350"
+	(footprint "LibraryCANLED:XTAL_HC49P488W46L1150T500H350"
 		(layer "F.Cu")
 		(uuid "4668ce2c-6e24-4d05-a433-a6ecf0cf2199")
 		(at 148.5 81.5 -90)
@@ -3769,7 +3769,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "TS02_66_55_BK_100_LCR_D:SW_TS02-66-55-BK-100-LCR-D"
+	(footprint "LibraryCANLED:SW_TS02-66-55-BK-100-LCR-D"
 		(layer "F.Cu")
 		(uuid "48b8b7e0-cbf2-46a2-bf31-50f803975054")
 		(at 168 94.5)
@@ -4051,7 +4051,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "4ddfaf43-54b6-4a06-8bd7-ae73e15eb5b4")
 		(at 161.42 83.5)
@@ -4225,7 +4225,7 @@
 			)
 		)
 	)
-	(footprint "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm"
+	(footprint "LibraryCANLED:CP_Radial_D10.0mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "526d8a69-25f8-4374-9874-0db0764176dd")
 		(at 149.6323 68.5)
@@ -6300,7 +6300,7 @@
 			)
 		)
 	)
-	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "559de7f9-dc70-4429-a6c1-90b48f30028a")
 		(at 163.42 64.5)
@@ -6474,7 +6474,7 @@
 			)
 		)
 	)
-	(footprint "footprints:K104K10X7RF5UH5_VIS"
+	(footprint "LibraryCANLED:K104K10X7RF5UH5_VIS"
 		(layer "F.Cu")
 		(uuid "60bd1471-9992-4093-a3ca-d5c3ebdc1fd6")
 		(at 177.5 68.499995 90)
@@ -6717,7 +6717,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Package_DIP:DIP-18_W7.62mm_LongPads"
+	(footprint "LibraryCANLED:DIP-18_W7.62mm_LongPads"
 		(layer "F.Cu")
 		(uuid "64649e54-6186-4854-ac40-8bbf7a948f94")
 		(at 143.81 97.58 180)
@@ -7118,7 +7118,7 @@
 			)
 		)
 	)
-	(footprint "2604-1103-1:CONN3_2604-1103_WAG"
+	(footprint "LibraryCANLED:CONN3_2604-1103_WAG"
 		(layer "F.Cu")
 		(uuid "75c70687-51a6-4a42-818c-106fc92fe493")
 		(at 189.5 57.199999 180)
@@ -7659,7 +7659,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "2604-1103-1:CONN3_2604-1103_WAG"
+	(footprint "LibraryCANLED:CONN3_2604-1103_WAG"
 		(layer "F.Cu")
 		(uuid "777a71af-3c82-42a9-9919-9ced33437902")
 		(at 169.9451 57.2 180)
@@ -8200,7 +8200,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm"
+	(footprint "LibraryCANLED:C_Disc_D6.0mm_W2.5mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "7a92cd5b-5506-4409-86a8-b9ec9049ccf5")
 		(at 158 88.5 180)
@@ -8383,7 +8383,7 @@
 			)
 		)
 	)
-	(footprint "LED_THT:LED_D4.0mm"
+	(footprint "LibraryCANLED:LED_D4.0mm"
 		(layer "F.Cu")
 		(uuid "7da2f039-dd6e-4ec6-898a-5df9bc269f91")
 		(at 173.23 77)
@@ -8635,7 +8635,7 @@
 			)
 		)
 	)
-	(footprint "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical"
+	(footprint "LibraryCANLED:PinHeader_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "805ed218-99c1-4244-8450-69c2f2b8d839")
 		(at 159.5 63.725)
@@ -8889,7 +8889,7 @@
 			)
 		)
 	)
-	(footprint "LED_THT:LED_D4.0mm"
+	(footprint "LibraryCANLED:LED_D4.0mm"
 		(layer "F.Cu")
 		(uuid "ab8704cc-e400-4eb8-859e-e2ce557e4385")
 		(at 167.23 77)
@@ -9141,7 +9141,7 @@
 			)
 		)
 	)
-	(footprint "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm"
+	(footprint "LibraryCANLED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "abc3feaf-785b-4893-b14a-557f4f6cb4c9")
 		(at 131.5 83 90)
@@ -9324,7 +9324,7 @@
 			)
 		)
 	)
-	(footprint "footprints:K104K10X7RF5UH5_VIS"
+	(footprint "LibraryCANLED:K104K10X7RF5UH5_VIS"
 		(layer "F.Cu")
 		(uuid "af090bfa-a740-4429-890c-472112539935")
 		(at 125 65.5 -90)
@@ -9567,7 +9567,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "afc3d57b-e7a8-410a-8162-41fa62f5c360")
 		(at 160.58 97 180)
@@ -9741,7 +9741,7 @@
 			)
 		)
 	)
-	(footprint "2604-1104-1:CONN4_2604-1104_WAG"
+	(footprint "LibraryCANLED:CONN4_2604-1104_WAG"
 		(layer "F.Cu")
 		(uuid "b408dc90-fe95-45be-b58e-22f41a65382a")
 		(at 130.9451 57.5 180)
@@ -10364,7 +10364,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal"
+	(footprint "LibraryCANLED:D_DO-41_SOD81_P10.16mm_Horizontal"
 		(layer "F.Cu")
 		(uuid "d491b078-07d8-4d37-9a38-fe58ace702e0")
 		(at 180.92 79.5)
@@ -10612,7 +10612,7 @@
 			)
 		)
 	)
-	(footprint "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm"
+	(footprint "LibraryCANLED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "d4d6f9d2-3df7-4692-ad7a-f0d8b3a2b2b8")
 		(at 131.5 91 90)
@@ -10795,7 +10795,7 @@
 			)
 		)
 	)
-	(footprint "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm"
+	(footprint "LibraryCANLED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "d695a8b6-e57a-4d98-b9ee-1bb123b8acfe")
 		(at 154 82 90)
@@ -10980,7 +10980,7 @@
 			)
 		)
 	)
-	(footprint "Connector_IDC:IDC-Header_2x03_P2.54mm_Vertical"
+	(footprint "LibraryCANLED:IDC-Header_2x03_P2.54mm_Vertical"
 		(layer "F.Cu")
 		(uuid "dad97b41-6350-4b09-9b6e-04400740e2c8")
 		(at 181.42 93.04 90)
@@ -11449,7 +11449,7 @@
 			)
 		)
 	)
-	(footprint "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P5.00mm"
+	(footprint "LibraryCANLED:C_Disc_D5.0mm_W2.5mm_P5.00mm"
 		(layer "F.Cu")
 		(uuid "e4218b69-b1e3-4c7a-9c0f-1d5e69d9c56d")
 		(at 158.5 77 -90)
@@ -11633,7 +11633,7 @@
 			)
 		)
 	)
-	(footprint "ABL-16.000MHZ-B2:XTAL_HC49P488W46L1150T500H350"
+	(footprint "LibraryCANLED:XTAL_HC49P488W46L1150T500H350"
 		(layer "F.Cu")
 		(uuid "e5f0d89b-21dc-4354-828c-682802d93ec7")
 		(at 126 86 -90)
@@ -11907,7 +11907,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Jumper:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm"
+	(footprint "LibraryCANLED:SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm"
 		(layer "F.Cu")
 		(uuid "f48e78e3-f4dc-4638-89f7-0286c9f8485d")
 		(at 126 95)
@@ -12079,7 +12079,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "2604-1103-1:CONN3_2604-1103_WAG"
+	(footprint "LibraryCANLED:CONN3_2604-1103_WAG"
 		(layer "F.Cu")
 		(uuid "fd71f5ed-e4d0-49e2-89d4-ada63f4eb8ee")
 		(at 150.5 57.199999 180)
@@ -12620,7 +12620,7 @@
 		)
 		(embedded_fonts no)
 	)
-	(footprint "Package_DIP:DIP-28_W7.62mm"
+	(footprint "LibraryCANLED:DIP-28_W7.62mm"
 		(layer "F.Cu")
 		(uuid "ff2abf18-a375-43bc-81a1-3602f64ccfeb")
 		(at 113.38 64.34)
