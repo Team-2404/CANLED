@@ -83,4 +83,9 @@ public class CANLED{
         byte[] msg = {1, r, g, b};
         canled.writePacket(msg, apiId);
     }
+    
+    public void useAllianceColor(){
+        byte[] msg = {5};
+        canled.writePacket(msg, apiId);
+    }
 }

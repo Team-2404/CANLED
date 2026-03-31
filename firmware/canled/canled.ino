@@ -41,6 +41,7 @@
 // Color order for LED strip - not entirely certain what this does, as ordering is strange
 #define COLOR_ORDER GRB  // GRB here but actually RGB?
 
+bool teamColorModeEnable = false;
 long unsigned int rxId;
 unsigned char len = 0;
 unsigned char rxBuf[8];
@@ -101,25 +102,33 @@ void loop() {
   switch (mode) {
     case 1:
       {
+        teamColorEnableState = false;
         fill_solid(leds, NUM_LEDS, CRGB(color[0], color[1], color[2]));
         FastLED.show();
         break;
       }
     case 2:
       {
+        teamColorEnableState = false;
         rainbowCycle(&rainbow_one);
         dir = random(0, 2);
         break;
       }
     case 3:
       {
+        teamColorEnableState = false;
         rainbowCycleSolid(&rainbow_two, color[0]);
         break;
       }
     case 4:
       {
+        teamColorEnableState = false;
         rainbow_real(&rainbow_three, color[0]);
         break;
+      }
+    case 5:
+      {
+        teamColorEnableState = true;
       }
     default:
       {
@@ -132,6 +141,13 @@ void loop() {
   {
     digitalWrite(LED_OK_PIN, HIGH);
     CAN0.readMsgBuf(&rxId, &len, rxBuf);  // Read data: len = data length, buf = data byte(s)
+    if(rxId == HEARTBEAT && teamColorEnableState){
+      if((rxBuf[3] >> 7) == 1){
+        fill_solid(leds, NUM_LEDS, CRGB(230,10,10));
+      }else{
+        fill_solid(leds, NUM_LEDS, CRGB(10,10,230));
+      }
+    }
     if(rxId == BROADCAST_DISABLE) // TEST
     {
       while(1)

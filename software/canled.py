@@ -17,6 +17,7 @@ class CANLED:
         self.api_id = 0b01010000010000000000000000000 + can_id
         self.wavenum = 4
         self.solidnum = 3
+        self.alliancenum = 5
 
     def solid_color(self, red : int, green : int, blue : int):
         """Sets all LEDs to a solid color"""
@@ -31,4 +32,8 @@ class CANLED:
     def rainbow_solid(self, wait = 10):
         """All LEDs cycle through the same colors. Waits for (wait) ms during loop."""
         # currently acts strangely
-        self.device.writePacket((self.solidnum).to_bytes()+wait, self.api_id)
+        self.device.writePacket((self.solidnum).to_bytes()+(wait).to_bytes, self.api_id)
+    
+    def use_alliance_color(self):
+        """Sets all LEDs to the alliance(red/blue) color set in the robot."""
+        self.device.writePacket((self.alliancenum).to_bytes(), self.api_id)
