@@ -32,16 +32,16 @@
 #define BROADCAST_DISABLE 0b00000000000000000000000000000
 
 // ROBORIO CAN Heartbeat
-#define HEARTBEAT 0x01011840
+#define HEARTBEAT 0b00001000000010001100001000000//0x01011840
 
 // Number of LEDs used in strip -- change if different
-#define NUM_LEDS 86
+#define NUM_LEDS 20//86
 // Type of LED controller -- change if different, must be supported by FastLED - see docs: https://github.com/FastLED/FastLED/wiki/Chipset-reference
 #define LED_TYPE WS2812B
 // Color order for LED strip - not entirely certain what this does, as ordering is strange
 #define COLOR_ORDER GRB  // GRB here but actually RGB?
 
-bool teamColorModeEnable = false;
+bool teamColorEnableState = false;
 long unsigned int rxId;
 unsigned char len = 0;
 unsigned char rxBuf[8];
@@ -49,6 +49,24 @@ char msgString[128];
 int mode = 0;
 int color[] = { 0, 0, 0 };
 byte dir;
+
+struct [[gnu::packed]] RobotState {
+  uint64_t matchTimeSeconds : 8;
+  uint64_t matchNumber : 10;
+  uint64_t replayNumber : 6;
+  uint64_t redAlliance : 1;
+  uint64_t enabled : 1;
+  uint64_t autonomous : 1;
+  uint64_t testMode : 1;
+  uint64_t systemWatchdog : 1;
+  uint64_t tournamentType : 3;
+  uint64_t timeOfDay_yr : 6;
+  uint64_t timeOfDay_month : 4;
+  uint64_t timeOfDay_day : 5;
+  uint64_t timeOfDay_sec : 6;
+  uint64_t timeOfDay_min : 6;
+  uint64_t timeOfDay_hr : 5;
+};
 
 MCP_CAN CAN0(CAN0_CS_PIN);
 CRGB leds[NUM_LEDS];
@@ -64,7 +82,7 @@ struct solid_rainbow_state {
 };
 
 struct real_rainbow_state {
-  u8 color;
+  u16 color;
 };
 
 #define SOLID_RAINBOW_INIT() (struct solid_rainbow_state) {.color = 0}
@@ -83,7 +101,7 @@ void setup() {
   FastLED.addLeds<LED_TYPE, LED_DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS);
 
   if (CAN0.begin(MCP_EXT, CAN_1000KBPS, MCP_8MHZ) == CAN_OK) {
-    digitalWrite(LED_OK_PIN, HIGH);
+    //digitalWrite(LED_OK_PIN, HIGH);
   }
 
   CAN0.init_Mask(0, 1, 0x3F);  // make sure these guys are doing something -- test on prebuilt modules
@@ -99,6 +117,8 @@ void setup() {
 }
 
 void loop() {
+  //rainbow_real(&rainbow_three,15);
+  //rainbowCycleSolid(&rainbow_two, 10);
   switch (mode) {
     case 1:
       {
@@ -129,6 +149,7 @@ void loop() {
     case 5:
       {
         teamColorEnableState = true;
+        break;
       }
     default:
       {
@@ -139,16 +160,24 @@ void loop() {
 
   if (!digitalRead(CAN0_INT_PIN))  // If CAN0_INT_PIN pin is low, read receive buffer
   {
-    digitalWrite(LED_OK_PIN, HIGH);
+    //digitalWrite(LED_OK_PIN, HIGH);
     CAN0.readMsgBuf(&rxId, &len, rxBuf);  // Read data: len = data length, buf = data byte(s)
+    if(rxId == HEARTBEAT){
+      fill_solid(leds, NUM_LEDS, CRGB(10,200,10));
+      FastLED.show();
+      digitalWrite(LED_OK_PIN, HIGH);
+    }
     if(rxId == HEARTBEAT && teamColorEnableState){
-      if((rxBuf[3] >> 7) == 1){
+      struct RobotState* state = (RobotState*)rxBuf;
+      if((rxBuf[4] & (1 << 7)) != 0){
         fill_solid(leds, NUM_LEDS, CRGB(230,10,10));
       }else{
         fill_solid(leds, NUM_LEDS, CRGB(10,10,230));
       }
+      FastLED.show();
+      FastLED.delay(10);
     }
-    if(rxId == BROADCAST_DISABLE) // TEST
+    if(rxId == BROADCAST_DISABLE && false) // TEST
     {
       while(1)
       {
@@ -232,12 +261,22 @@ CRGB wheel(int WheelPos, int dim) {
 
 
 void rainbowCycleSolid(struct solid_rainbow_state* state, u8 wait) {
-  /* TODO: i dont know what the diffrence between the conversion functions are */
-  CRGB c = hsv2rgb_rainbow(CHSV(state->color, 255, 255));
-  state->color++;
-  fill_solid(leds, NUM_LEDS, c);\
+  struct CHSV hsv = CHSV(state->color, 255, 255);
+
+  /* TODO: i dont know what the difference between the conversion functions are */
+  //hsv2rgb_rainbow(&hsv, leds, NUM_LEDS);
+  for(int i = 0; i<NUM_LEDS;i++){
+    leds[i].setHSV(state->color,255,225);
+    if(255-state->color<10){
+      leds[i].setHSV(state->color,255,225);
+    }
+    
+  }
   FastLED.show();
   FastLED.delay(wait);
+  state->color++;
+  //fill_solid(leds, NUM_LEDS, c);
+  
   // state->num_color++;
   // if (state->num_color == 0) {
   //   state->num_color = 0;
@@ -262,7 +301,7 @@ void rainbowCycleSolid(struct solid_rainbow_state* state, u8 wait) {
 void rainbow_real(struct real_rainbow_state* state, u8 wait){
   state->color++;
   for(int i = 0; i<NUM_LEDS;i++){
-    leds[i].setHSV(state->color+i,255,255);
+    leds[i].setHSV(i * 255 / NUM_LEDS,255,255);//state->color+(2*i)
   }
   FastLED.show();
   FastLED.delay(wait);
